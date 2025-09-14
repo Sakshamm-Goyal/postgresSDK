@@ -1,0 +1,51 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: sourcesense-postgres
+    environment:
+      POSTGRES_DB: sample_db
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: password
+      POSTGRES_INITDB_ARGS: "--encoding=UTF-8 --lc-collate=C --lc-ctype=C"
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./docker/postgres/init.sql:/docker-entrypoint-initdb.d/init.sql
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres -d sample_db"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - sourcesense-network
+
+  sourcesense-app:
+    build: .
+    container_name: sourcesense-app
+    ports:
+      - "8000:8000"
+    environment:
+      - POSTGRES_HOST=postgres
+      - POSTGRES_PORT=5432
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DATABASE=sample_db
+      - APP_NAME=sourcesense-postgres
+      - TENANT_ID=demo-tenant
+      - CONNECTION_NAME=demo-connection
+    depends_on:
+      postgres:
+        condition: service_healthy
+    networks:
+      - sourcesense-network
+
+volumes:
+  postgres_data:
+
+networks:
+  sourcesense-network:
+    driver: bridge
+
