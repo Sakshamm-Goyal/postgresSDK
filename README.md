@@ -359,6 +359,33 @@ uv run poe stop-deps
 - **Impact Analysis**: Understand downstream effects of schema changes
 - **Compliance**: Track data lineage for regulatory requirements
 
+## 📚 Additional Documentation
+
+### 🏗️ Architecture & Technical Documentation
+
+- [Architecture Notes](ARCHITECTURE.md) - High-level design decisions and technical architecture
+- [Framework Notes](FRAMEWORK_NOTES.md) - Atlan Apps Framework challenges and patterns
+- [Demo Instructions](DEMO_INSTRUCTIONS.md) - Step-by-step demo walkthrough
+- [Video Script](VIDEO_SCRIPT.md) - 5-7 minute video walkthrough script
+
+### 📊 Demo Data Overview
+
+The application includes a comprehensive sample database with:
+- **2,000+ Products** across 50+ categories
+- **500+ Users** with addresses and order history
+- **1,500+ Orders** with 3,000+ line items
+- **5,000+ Analytics Events** and product views
+- **Multiple Schemas**: analytics, ecommerce, reporting
+- **Complex Relationships**: Foreign keys and data dependencies
+
+### 🎬 Video Submission
+
+A comprehensive 5-7 minute walkthrough video demonstrating:
+- **Application in Action**: Real-time metadata extraction workflow
+- **Key Technical Decisions**: Architecture choices and implementation details
+- **Challenges and Solutions**: Problem-solving approach and technical solutions
+- **Complete Feature Set**: All metadata extraction requirements met
+
 ## 🤝 Contributing
 
 We welcome contributions! Please feel free to submit a Pull Request.

@@ -30,13 +30,12 @@ class PostgreSQLHandler(BaseSQLHandler):
     
     # Override the metadata SQL to use PostgreSQL syntax
     metadata_sql = """
-    SELECT 
-        s.schema_name, 
-        s.catalog_name
-    FROM information_schema.schemata s
-    WHERE s.schema_name NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
-        AND CONCAT(s.catalog_name, '.', s.schema_name) !~ '{normalized_exclude_regex}'
-        AND CONCAT(s.catalog_name, '.', s.schema_name) ~ '{normalized_include_regex}'
+    SELECT DISTINCT
+        t.table_catalog AS catalog_name,
+        t.table_schema AS schema_name
+    FROM information_schema.tables t
+    WHERE t.table_schema NOT IN ('pg_catalog', 'information_schema', 'pg_toast')
+    ORDER BY t.table_catalog, t.table_schema
     """
     
     # Override the client version SQL for PostgreSQL
