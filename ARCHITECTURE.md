@@ -69,7 +69,65 @@ sample_db/
     └── product_performance # Product analytics
 ```
 
-### 4. **Workflow Orchestration with Temporal**
+
+### 4. **Permanent ID (Permaid) Strategy**
+**Decision**: Implemented comprehensive permanent ID system for entity identification and lineage tracking.
+
+**Rationale**:
+- **Unique Identification**: Each entity gets a globally unique, stable identifier
+- **Lineage Tracking**: Enables proper relationship mapping between entities
+- **Data Governance**: Supports data lineage and impact analysis
+- **Framework Compatibility**: Aligns with Atlan's entity identification standards
+
+**Implementation Details**:
+
+#### **Qualified Name Construction**
+```python
+from application_sdk.transformers.common.utils import build_atlas_qualified_name
+
+# Database Level
+"qualifiedName": build_atlas_qualified_name(
+    connection_qualified_name, database_name
+)
+
+# Schema Level  
+"qualifiedName": build_atlas_qualified_name(
+    connection_qualified_name, database_name, schema_name
+)
+
+# Table Level
+"qualifiedName": build_atlas_qualified_name(
+    connection_qualified_name, database_name, schema_name, table_name
+)
+
+# Column Level
+"qualifiedName": build_atlas_qualified_name(
+    connection_qualified_name, database_name, schema_name, table_name, column_name
+)
+```
+
+#### **Entity Hierarchy & Permaids**
+```
+Connection: default/sourcesense-postgres/{connection_id}
+├── Database: default/sourcesense-postgres/{connection_id}/sample_db
+│   ├── Schema: default/sourcesense-postgres/{connection_id}/sample_db/analytics
+│   │   ├── Table: default/sourcesense-postgres/{connection_id}/sample_db/analytics/product_views
+│   │   │   ├── Column: default/sourcesense-postgres/{connection_id}/sample_db/analytics/product_views/id
+│   │   │   ├── Column: default/sourcesense-postgres/{connection_id}/sample_db/analytics/product_views/product_id
+│   │   │   └── Column: default/sourcesense-postgres/{connection_id}/sample_db/analytics/product_views/user_id
+│   │   └── Table: default/sourcesense-postgres/{connection_id}/sample_db/analytics/sales_summary
+│   └── Schema: default/sourcesense-postgres/{connection_id}/sample_db/ecommerce
+│       ├── Table: default/sourcesense-postgres/{connection_id}/sample_db/ecommerce/products
+│       └── Table: default/sourcesense-postgres/{connection_id}/sample_db/ecommerce/users
+```
+
+#### **Key Benefits**:
+- **Stable References**: Permaids remain constant across metadata refreshes
+- **Relationship Mapping**: Enables accurate foreign key and lineage tracking
+- **Data Discovery**: Supports search and discovery across the data catalog
+- **Impact Analysis**: Enables understanding of downstream dependencies
+
+### 5. **Workflow Orchestration with Temporal**
 **Decision**: Used Temporal for workflow management and activity coordination.
 
 **Rationale**:
@@ -90,7 +148,7 @@ PostgreSQLMetadataExtractionWorkflow
 └── MetadataTransformationActivity
 ```
 
-### 5. **Docker-Based Development Environment**
+### 6. **Docker-Based Development Environment**
 **Decision**: Containerized PostgreSQL database with Docker Compose.
 
 **Rationale**:
@@ -114,7 +172,7 @@ services:
       - postgres_data:/var/lib/postgresql/data
 ```
 
-### 6. **FastAPI Web Interface**
+### 7. **FastAPI Web Interface**
 **Decision**: Built REST API with FastAPI for user interaction.
 
 **Rationale**:
@@ -131,7 +189,7 @@ GET  /workflows/v1/status/{id}  # Check workflow status
 GET  /workflows/v1/results/{id} # Get extraction results
 ```
 
-### 7. **Frontend-Backend Separation**
+### 8. **Frontend-Backend Separation**
 **Decision**: Separate JavaScript frontend with REST API backend.
 
 **Rationale**:
